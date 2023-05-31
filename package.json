@@ -1,0 +1,30 @@
+{
+  "name": "ts-orm-comparison",
+  "version": "1.0.0",
+  "description": "Comparing different ORMs",
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc",
+    "generate-data": "ts-node ./generate.ts",
+    "typeorm": "typeorm-ts-node-commonjs -d typeorm/datasource.ts",
+    "drizzle": "drizzle-kit",
+    "drizzle:generate": "drizzle-kit generate:pg --out drizzle/migrations --schema drizzle/db/schema.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^4.15.0",
+    "drizzle-orm": "^0.26.3",
+    "pg": "^8.11.0",
+    "prisma": "^4.15.0",
+    "typeorm": "^0.3.16"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
+    "@types/pg": "^8.10.1",
+    "drizzle-kit": "^0.18.1",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.0.4"
+  }
+}
