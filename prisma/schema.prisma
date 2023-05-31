@@ -1,4 +1,4 @@
-model Human {
+model HumanEntity {
   id    Int      @id @default(autoincrement())
   uuid  String   @db.Uuid @default(dbgenerated("gen_random_uuid()"))
   name  String   @db.VarChar(200)

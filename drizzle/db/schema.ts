@@ -2,18 +2,20 @@ import {integer, pgTable, serial, text, timestamp, uuid, varchar} from "drizzle-
 import {drizzle} from "drizzle-orm/node-postgres";
 import {Pool} from "pg";
 import {migrate} from "drizzle-orm/node-postgres/migrator";
+import {InferModel} from "drizzle-orm";
 
 export const human = pgTable('drizzle_humans', {
     id: serial('id').primaryKey(),
-    uuid: uuid('uuid').defaultRandom(),
+    uuid: uuid('uuid').defaultRandom().notNull(),
     name: varchar('name', {length: 200}).notNull(),
-    quote: text('quote'),
-    color: varchar('color', {enum: ['green', 'blue', 'red', 'black', 'hotpink']}),
-    ip: varchar('ip', {length:15}),
-    age: integer('age'),
-    dob: timestamp('dob', {mode: 'string'})
+    quote: text('quote').notNull(),
+    color: varchar('color', {enum: ['green', 'blue', 'red', 'black', 'hotpink']}).notNull(),
+    ip: varchar('ip', {length:15}).notNull(),
+    age: integer('age').notNull(),
+    dob: timestamp('dob', {mode: 'date'}).notNull()
 })
 
+export type Human = InferModel<typeof human>
 
 const pg = new Pool({
     host: 'localhost',
@@ -22,13 +24,14 @@ const pg = new Pool({
     database: 'ts-orm',
     port: 5432,
 })
-const db = drizzle(pg)
-migrate(db, {migrationsFolder: './drizzle/migrations'})
-    .then(() => {
-        console.log("Migrations complete!");
-        process.exit(0);
-    })
-    .catch((err) => {
-        console.error("Migrations failed!", err);
-        process.exit(1);
-    });
+
+export const db = drizzle(pg)
+// migrate(db, {migrationsFolder: './drizzle/migrations'})
+//     .then(() => {
+//         console.log("Migrations complete!");
+//         process.exit(0);
+//     })
+//     .catch((err) => {
+//         console.error("Migrations failed!", err);
+//         process.exit(1);
+//     });

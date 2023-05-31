@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "tsc": "tsc",
+    "ts-node": "ts-node",
     "generate-data": "ts-node ./generate.ts",
     "typeorm": "typeorm-ts-node-commonjs -d typeorm/datasource.ts",
     "drizzle": "drizzle-kit",
@@ -18,10 +19,12 @@
     "drizzle-orm": "^0.26.3",
     "pg": "^8.11.0",
     "prisma": "^4.15.0",
+    "reflect-metadata": "^0.1.13",
     "typeorm": "^0.3.16"
   },
   "devDependencies": {
     "@faker-js/faker": "^8.0.2",
+    "@types/node": "^20.2.5",
     "@types/pg": "^8.10.1",
     "drizzle-kit": "^0.18.1",
     "ts-node": "^10.9.1",
