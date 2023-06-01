@@ -1,14 +1,23 @@
-model HumanEntity {
-  id    Int      @id @default(autoincrement())
-  uuid  String   @db.Uuid @default(dbgenerated("gen_random_uuid()"))
-  name  String   @db.VarChar(200)
-  quote String   @db.Text
-  color COLOR
-  ip    String   @db.VarChar(15)
-  age   Int      @db.Integer
-  dob   DateTime @db.Date
+model Human {
+  id     Int      @id @default(autoincrement())
+  uuid   String   @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name   String   @db.VarChar(200)
+  quote  String   @db.Text
+  color  COLOR
+  ip     String   @db.VarChar(15)
+  age    Int      @db.Integer
+  dob    DateTime @db.Date
+  cityId Int?
+  city   City?    @relation(fields: [cityId], references: [id])
 
   @@map("prisma_humans")
+}
+
+model City {
+  id    Int     @id @default(autoincrement())
+  uuid  String  @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String  @db.VarChar()
+  Human Human[]
 }
 
 enum COLOR {
@@ -20,7 +29,6 @@ enum COLOR {
 
   @@map("prisma_color_enum")
 }
-
 
 generator client {
   provider = "prisma-client-js"

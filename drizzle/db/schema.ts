@@ -12,10 +12,18 @@ export const human = pgTable('drizzle_humans', {
     color: varchar('color', {enum: ['green', 'blue', 'red', 'black', 'hotpink']}).notNull(),
     ip: varchar('ip', {length:15}).notNull(),
     age: integer('age').notNull(),
-    dob: timestamp('dob', {mode: 'date'}).notNull()
+    dob: timestamp('dob', {mode: 'date'}).notNull(),
+    cityId: integer('city_id').references(() => cities.id)
 })
 
 export type Human = InferModel<typeof human>
+
+export const cities = pgTable('cities', {
+    id: serial('id').primaryKey(),
+    name: text('name').notNull(),
+});
+
+export type City = InferModel<typeof cities>
 
 const pg = new Pool({
     host: 'localhost',

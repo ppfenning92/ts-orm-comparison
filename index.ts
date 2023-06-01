@@ -1,23 +1,62 @@
 import {PrismaClient} from '@prisma/client'
-import {db as drizzle, human, Human} from "./drizzle/db/schema";
+import {cities, db as drizzle, human, Human} from "./drizzle/db/schema";
 import {HumanEntity} from "./typeorm/humanEntity";
-import {_typeorm} from "./typeorm/datasource";
+import {_typeormDS} from "./typeorm/datasource";
+import {eq} from "drizzle-orm";
 
-const prisma = new PrismaClient()
-
-declare function prismaFindFirst(): Awaited<ReturnType<typeof prisma.human.findFirst>>
-const prisma_human = prismaFindFirst()
+const prisma = new PrismaClient();
 
 
-const drizzle_human = (await drizzle.select().from(human).limit(1))[0]
+async function _drizzle() {
+    const h = (await drizzle.select().from(human).limit(1))[0]
+    const h_with_selects = (await drizzle.select({
+        id: human.id
+    }).from(human).where(eq(human.id, 1)))[0]
+
+    const h_join_cities = (await drizzle.select({
+        id: human.id,
+        city: {id: cities.id, name: cities.name}
+    }).from(human)
+        .leftJoin(cities, eq(human.cityId, cities.id))
+
+    )[0]
+    console.log(h_join_cities.city?.name)
+}
+
+async function _prisma() {
+    const h = await prisma.human.findFirst()
+    const h_with_selects = await prisma.human.findFirst({select: {id: true}, where: {id: {equals: 1}}})
+    console.log(h?.city)
+
+    const h_join_cities = await
+        prisma.human.findFirst({
+        select: {
+            id: true,
+            city: {
+                select: {id: true, name: true}
+            }},
+    })
+    console.log(h_join_cities?.city?.name)
+}
 
 
-const typeorm = {human: _typeorm.getRepository(HumanEntity)}
-declare function typeormFindFirst(): Awaited<ReturnType<typeof typeorm.human.findOne>>
+async function _typeorm() {
+    const humanRepository = _typeormDS.getRepository(HumanEntity);
+    const h = await humanRepository.findOne({select: {id: true}})
+
+    console.log(h?.city)
+
+    const h_join_cities = await
+        humanRepository.findOne({
+        select: {id: true},
+        relations: {city: true}
+    })
+    console.log(h_join_cities?.city?.name)
+}
 
 
-const typeorm_human = typeormFindFirst()
-
-let x = prisma_human;
-x = typeorm_human;
-x = drizzle_human;
+drizzle.select({
+    id: human.id,
+    city: {id: cities.id, name: cities.name}
+}).from(human)
+    .leftJoin(cities, eq(human.cityId, cities.id))

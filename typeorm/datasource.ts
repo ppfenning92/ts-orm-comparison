@@ -1,7 +1,7 @@
 import {DataSource} from "typeorm";
-import {HumanEntity} from "./humanEntity";
-import "reflect-metadata"
-export const _typeorm = new DataSource({
+import {CityEntity, HumanEntity} from "./humanEntity";
+
+export const _typeormDS = new DataSource({
     type: "postgres",
     host: "localhost",
     port: 5432,
@@ -9,6 +9,6 @@ export const _typeorm = new DataSource({
     password: "super_secret_pass",
     database: "ts-orm",
     entities: [
-        HumanEntity
+        HumanEntity,CityEntity
     ],
 })

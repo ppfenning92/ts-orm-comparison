@@ -1,6 +1,6 @@
 
 import {getH} from "../generate";
-import {_typeorm} from "../typeorm/datasource";
+import {_typeormDS} from "../typeorm/datasource";
 import {HumanEntity} from "../typeorm/humanEntity";
 import "reflect-metadata"
 import {LessThan, MoreThanOrEqual, Not} from "typeorm";
@@ -9,9 +9,9 @@ import {randomInt} from "crypto";
 const N = Number(process.argv[2]) ?? 0;
 
 async function main() {
-    await _typeorm.initialize()
+    await _typeormDS.initialize()
 
-    const humanRepository = _typeorm.getRepository(HumanEntity)
+    const humanRepository = _typeormDS.getRepository(HumanEntity)
     let i = 0;
     const _new = []
     while (i < N) {
@@ -27,6 +27,6 @@ async function main() {
         i++;
     }
     await humanRepository.delete({age: MoreThanOrEqual(0)})
-    await _typeorm.destroy()
+    await _typeormDS.destroy()
 }
 main()
